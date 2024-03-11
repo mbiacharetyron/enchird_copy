@@ -1,0 +1,203 @@
+.email-template {
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .email-template .frame-wrapper {
+    background-color: var(--enchird-whiteenchird-white-1);
+    width: 788px;
+    height: 2393px;
+  }
+  
+  .email-template .frame {
+    display: flex;
+    flex-direction: column;
+    width: 659px;
+    align-items: flex-start;
+    gap: 48px;
+    position: relative;
+    top: 63px;
+    left: 65px;
+  }
+  
+  .email-template .enchird-logo-wrapper {
+    position: relative;
+    width: 232px;
+    height: 55px;
+  }
+
+  
+  .email-template .enchird-logo {
+    display: flex;
+    width: 609px;
+    height: 55px;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+  }
+  
+  .email-template .icon-book-saved {
+    position: relative;
+    width: 240px;
+    height: 60px;
+    margin-left: -2px;
+  }
+  
+  .email-template .text-wrapper {
+    position: relative;
+    width: fit-content;
+    margin-top: -10.5px;
+    margin-bottom: -8.5px;
+    font-family: "Kurale-Regular", Helvetica;
+    font-weight: 400;
+    color: var(--enchird-primaryenchird-primary-1);
+    font-size: 50px;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .email-template .div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 70px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+  }
+  
+  .email-template .frame-2 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 36px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+  }
+  
+  .email-template .subject-notification {
+    position: relative;
+    align-self: stretch;
+    margin-top: -1px;
+    font-family: "Inter-Regular", Helvetica;
+    font-weight: 400;
+    color: var(--enchird-blackenchird-black-2);
+    font-size: 24px;
+    letter-spacing: 0;
+    line-height: 36px;
+  }
+  
+  .email-template .span {
+    font-family: "Inter-Regular", Helvetica;
+    font-weight: 400;
+    color: #1e201e;
+    font-size: 24px;
+    letter-spacing: 0;
+    line-height: 36px;
+  }
+  
+  .email-template .text-wrapper-2 {
+    font-family: "Inter-Bold", Helvetica;
+    font-weight: 700;
+  }
+  
+  .email-template .text-wrapper-3 {
+    font-family: "Inter-SemiBold", Helvetica;
+    font-weight: 600;
+  }
+  
+  .email-template .frame-3 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+  }
+  
+  .email-template .p {
+    position: relative;
+    width: fit-content;
+    margin-top: -1px;
+    font-family: "Inter-Bold", Helvetica;
+    font-weight: 700;
+    color: #000000;
+    font-size: 24px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  
+  .email-template .button-desktop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 24px 32px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    background-color: var(--enchird-primaryenchird-primary-1);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .email-template .button-component {
+    position: relative;
+    width: fit-content;
+    margin-top: -1px;
+    font-family: var(--bodytext-regular-18-font-family);
+    font-weight: var(--bodytext-regular-18-font-weight);
+    color: var(--enchird-whiteenchird-white-1);
+    font-size: var(--bodytext-regular-18-font-size);
+    letter-spacing: var(--bodytext-regular-18-letter-spacing);
+    line-height: var(--bodytext-regular-18-line-height);
+    font-style: var(--bodytext-regular-18-font-style);
+  }
+  
+  .email-template .auto-layout-vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+  }
+  
+  .email-template .text-wrapper-4 {
+    position: relative;
+    width: 82px;
+    margin-top: -1px;
+    font-family: "Barlow-Bold", Helvetica;
+    font-weight: 700;
+    color: #000000;
+    font-size: 24px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+    text-decoration: underline;
+  }
+  
+  .email-template .text-wrapper-5 {
+    position: relative;
+    width: fit-content;
+    font-family: "Inter-Regular", Helvetica;
+    font-weight: 400;
+    color: #000000;
+    font-size: 24px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+  }
+  

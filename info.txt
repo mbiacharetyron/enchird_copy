@@ -1,0 +1,2 @@
+DATABASE BACKUP COMMAND 
+"C:\Program Files\PostgreSQL\<version>\bin\pg_dump.exe" -U postgres -d enchird_database -f backup.sql

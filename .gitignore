@@ -1,0 +1,16 @@
+.env
+__pycache__/
+*.py[cod]
+.venv
+.DS_Store
+.vscode/
+
+
+# Backend Virtual environment
+enchird_backend/env.py
+
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+
+
