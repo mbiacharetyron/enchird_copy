@@ -35,7 +35,8 @@ DEBUG = True
 ALLOWED_HOSTS = ['enchird.biz',
                   'https://enchird.biz',
                   '127.0.0.1',
-                  'localhost'
+                  'enchird-app.onrender.com'
+                #   'localhost'
 ]
 
 
