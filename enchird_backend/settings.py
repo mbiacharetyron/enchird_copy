@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
-from .env import *
+# from .env import *
 from pathlib import Path
 from datetime import timedelta
 from rest_framework.settings import api_settings
@@ -37,6 +37,22 @@ ALLOWED_HOSTS = ['enchird.biz',
                   '127.0.0.1',
                   'localhost'
 ]
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': db_name,
+        'USER': db_user,
+        'PASSWORD': db_password,
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        }
+    }
+}
+
 
 # Application definition
 
