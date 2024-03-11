@@ -48,9 +48,9 @@ DATABASES = {
         'PASSWORD': 'K5i5L2IopMjD2lqiLk2M03b7GGnalhbt',
         'HOST': 'localhost', #'127.0.0.1',
         'PORT': '5432',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        }
+        # 'OPTIONS': {
+        #     'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        # }
     }
 }
 
