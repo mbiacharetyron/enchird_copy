@@ -42,17 +42,32 @@ ALLOWED_HOSTS = ['enchird.biz',
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'enchird_db',
         'USER': 'enchird_db_user',
-        'PASSWORD': 'enchird_db#301254',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
+        'PASSWORD': 'K5i5L2IopMjD2lqiLk2M03b7GGnalhbt',
+        'HOST': 'localhost', #'127.0.0.1',
+        'PORT': '5432',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         }
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'enchird_db',
+#         'USER': 'enchird_db_user',
+#         'PASSWORD': 'enchird_db#301254',
+#         'HOST': '127.0.0.1',
+#         'PORT': '3306',
+#         'OPTIONS': {
+#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+#         }
+#     }
+# }
 
 
 # DATABASES = {
