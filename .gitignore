@@ -7,6 +7,9 @@ __pycache__/
 
 
 # Backend Virtual environment
+venv/
+
+# Environment variables
 enchird_backend/env.py
 
 

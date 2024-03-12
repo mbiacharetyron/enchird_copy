@@ -9,12 +9,14 @@ https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
 
 import os 
 # from . import routing
+import django
 from apis.messaging import routing
 from channels.auth import AuthMiddlewareStack
 from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
 from apis.messaging.middleware import TokenAuthMiddleware
-# from .middleware import TokenAuthMiddleware
+# from .middleware import TokenAuthMiddlewareimport django
+django.setup()
 
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'enchird_backend.settings')
