@@ -8,8 +8,9 @@ https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
 """
 
 import os 
-# from . import routing
+from django.core.asgi import get_asgi_application
 import django
+# from channels.http import AsgiHandler
 from apis.messaging import routing
 from channels.auth import AuthMiddlewareStack
 from django.core.asgi import get_asgi_application
