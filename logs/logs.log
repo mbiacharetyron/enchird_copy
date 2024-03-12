@@ -1,1 +1,2 @@
 INFO : 2024-03-12 00:25:51,616 : 1 : 616 : User Logged in sucessfully. : login : None
+ERROR : 2024-03-12 18:36 : 1 : 987 : {views} : [create_group] : Teacher Not Found. : [in C:\copy_enchird\.\apis\messaging\views.py:views.py:38]

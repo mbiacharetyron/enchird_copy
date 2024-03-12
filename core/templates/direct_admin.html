@@ -58,7 +58,9 @@
     /// Determine the WebSocket protocol based on the application's URL
     const AuthToken = "04fc0ca8ad3887132cf5ff3dd22166bddf661c51973586a85179768e4a5311dc";
     const websocketProtocol = window.location.protocol === "https:" ? "wss" : "ws";
-    const wsEndpoint = `${websocketProtocol}://${window.location.host}/ws/chat/{{other_user}}/${AuthToken}`;
+
+    {% comment %} const wsEndpoint = `${websocketProtocol}://${window.location.host}/ws/chat/{{other_user}}/${AuthToken}`; {% endcomment %}
+    const wsEndpoint = `${websocketProtocol}://enchird-app.onrender.com/ws/chat/{{other_user}}/${AuthToken}`;
 
     // Create a new WebSocket connection
     const socket = new WebSocket(wsEndpoint);

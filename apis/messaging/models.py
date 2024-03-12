@@ -25,7 +25,7 @@ class DirectMessage(models.Model):
 
 class ChatGroup(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    # course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='chat_groups')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='chat_groups')
     code = models.CharField(max_length=10, unique=True, blank=False, null=False)
     members = models.ManyToManyField(User, blank=True, related_name='chat_groups')
     created_at = models.DateTimeField(

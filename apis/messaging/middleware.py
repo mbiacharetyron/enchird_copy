@@ -17,9 +17,11 @@ class TokenAuthMiddleware(BaseMiddleware):
 
             # Parse the query string to get the token
             token_param = next((param.split("=") for param in query_string.split("&") if param.startswith("token=")), None)
+            print(token_param)
 
             if token_param: 
                 token_key = token_param[1]
+                print(token_key)
                 
                 scope["user"] = await self.get_user_from_token(token_key)
                 
