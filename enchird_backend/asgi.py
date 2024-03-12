@@ -8,12 +8,11 @@ https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
 """
 
 import os 
-# from django.core.asgi import get_asgi_application
+from django.core.asgi import get_asgi_application
 import django
-from channels.http import AsgiHandler
+# from channels.http import AsgiHandler
 from apis.messaging import routing
 from channels.auth import AuthMiddlewareStack
-from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
 from apis.messaging.middleware import TokenAuthMiddleware
 # from .middleware import TokenAuthMiddlewareimport django
@@ -26,7 +25,7 @@ django_asgi_app = get_asgi_application()
 
 
 application = ProtocolTypeRouter({
-    "http": AsgiHandler(), #django_asgi_app,
+    "http": django_asgi_app,
     "websocket": TokenAuthMiddleware(
             AuthMiddlewareStack(
                 URLRouter(
