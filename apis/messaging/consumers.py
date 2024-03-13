@@ -115,7 +115,7 @@ class GroupChatConsumer(SyncConsumer):
             print("An error occured:", str(e))
     
     
-    def group_has_user(group_id, user_id):
+    def group_has_user(self, group_id, user_id):
         try:
             # Check if the user is a member of the group
             group = ChatGroup.objects.get(id=group_id, members__id=user_id)
