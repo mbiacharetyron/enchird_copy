@@ -55,7 +55,7 @@
 
     /// Determine the WebSocket protocol based on the application's URL
     const websocketProtocol = window.location.protocol === "https:" ? "wss" : "ws";
-    const wsEndpoint = `${websocketProtocol}://${window.location.host}/ws/group/{{group_id}}/{{user}}/`;
+    const wsEndpoint = `${websocketProtocol}://${window.location.host}/ws/group/{{group_id}}/?token={{ token }}`;
 
     // Create a new WebSocket connection
     const socket = new WebSocket(wsEndpoint);
