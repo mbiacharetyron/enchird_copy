@@ -30,6 +30,7 @@ class GroupChatConsumer(SyncConsumer):
             
             # Check if the user is a member of the group
             if not self.group_has_user(group_id, user.id):
+                logger.error(f"User {user.id} is not a member of the group", extra={'user': user.id})
                 print(f"User {user.id} is not a member of the group.")
                 raise DenyConnection("You are not a member of this group.")
             
@@ -39,6 +40,7 @@ class GroupChatConsumer(SyncConsumer):
             try:
                 group = ChatGroup.objects.get(id=group_id)
             except ChatGroup.DoesNotExist:
+                logger.error(f"ChatGroup with id={group_id} not found or is deleted.", extra={'user': user.id})
                 print(f"ChatGroup with id={group_id} not found or is deleted.")
                 raise DenyConnection("User not found or is deleted")
 
@@ -46,6 +48,8 @@ class GroupChatConsumer(SyncConsumer):
                 'type': 'websocket.accept'
             }) 
             async_to_sync(self.channel_layer.group_add)(self.group_name, self.channel_name)
+            
+            logger.error(f"User {user} is connected to socket [{self.channel_name}]", extra={'user': user.id})
             print(f'[{self.channel_name}] - You are connected')
             
         except Exception as e:
@@ -119,6 +123,7 @@ class GroupChatConsumer(SyncConsumer):
         try:
             # Check if the user is a member of the group
             group = ChatGroup.objects.get(id=group_id, members__id=user_id)
+            print(group)
             return True
         except ChatGroup.DoesNotExist:
             return False
@@ -134,7 +139,7 @@ class ChatConsumer(SyncConsumer):
             try:
                 other_user = User.objects.get(id=other_usr, is_deleted=False)
             except ChatGroup.DoesNotExist:
-                logger.error(f"User with id={other_usr} not found or is deleted.", extra={'user': "Anonymous"})
+                logger.error(f"User with id={other_usr} not found or is deleted.", extra={'user': user.id})
                 print(f"User with id={other_usr} not found or is deleted.")
                 raise DenyConnection(f"User with id={other_usr} not found or is deleted.")
             print(other_user)
