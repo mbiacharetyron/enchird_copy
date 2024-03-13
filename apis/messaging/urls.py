@@ -13,7 +13,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('messaging/', CreateRoom, name='create-room'),
     path('chat-messaging/<str:other_user>/<str:token>/', MessageView, name='chat'),
-    path('group-messaging/<str:group_id>/<str:username>/', GroupMessageView, name='room'),
+    path('group-messaging/<str:group_id>/<str:token>/', GroupMessageView, name='room'),
     
     path('send-direct-message/<int:receiver_id>/', send_direct_message, name='send_direct_message'),
     path('groups/<int:group_id>/messages/', MessageListAPIView.as_view(), name='message-list'),

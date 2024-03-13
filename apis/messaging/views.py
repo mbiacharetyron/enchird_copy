@@ -528,7 +528,36 @@ def MessageView(request, other_user, token):
 
 
 
-def GroupMessageView(request, group_id, username):
+def GroupMessageView(request, group_id, token):
+    
+    try:
+        print(token)
+        try:
+            knox_object = AuthToken.objects.get(token_key=token[:CONSTANTS.TOKEN_KEY_LENGTH]) #.first()
+            print(knox_object) 
+            user = knox_object.user
+        except Exception as e:
+            logger.error( str(e), extra={ 'user': "Anonymous" })
+            return JsonResponse({'message': str(e)})
+            # print(str(e))
+        
+        # Check if the Knox object exists and if the token is expired
+        if knox_object and knox_object.expiry:
+            current_time = timezone.now()
+
+            # Compare the expiry timestamp with the current time
+            if knox_object.expiry < current_time:
+                # The token is not expired
+                logger.error( "Token is expired", extra={ 'user': "Anonymous" })
+                return JsonResponse({'message': 'Token is expired'})
+        else:
+            # The Knox object is not found (invalid token)
+            logger.error( "Invalid token or Knox object not found", extra={ 'user': "Anonymous" })
+            return JsonResponse({'error': 'Invalid token or Knox object not found'}, status=400)
+
+    except AuthToken.DoesNotExist:
+        logger.error( "User not found", extra={ 'user': user.id })
+        return
     
     get_group = ChatGroup.objects.get(id=group_id)
     print(get_group)
@@ -538,7 +567,7 @@ def GroupMessageView(request, group_id, username):
 
         print(message)
 
-        new_message = GroupMessage(group=get_group, sender=username, content=message)
+        new_message = GroupMessage(group=get_group, sender=user, content=message)
         new_message.save()
         
     # Fetch previous messages
@@ -549,9 +578,10 @@ def GroupMessageView(request, group_id, username):
     # print(get_messages)
     
     context = {
-        "messages": get_messages,
-        "user": username,
+        "token": token,
+        "user": user.id,
         "group_id": group_id,
+        "messages": get_messages,
     }
     return render(request, '_message.html', context)
 

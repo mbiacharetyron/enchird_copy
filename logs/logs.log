@@ -1,3 +1,7 @@
 INFO : 2024-03-12 00:25:51,616 : 1 : 616 : User Logged in sucessfully. : login : None
 ERROR : 2024-03-12 18:36 : 1 : 987 : {views} : [create_group] : Teacher Not Found. : [in C:\copy_enchird\.\apis\messaging\views.py:views.py:38]
 ERROR : 2024-03-12 19:14 : 2 : 180 : {views} : [create_group] : Group created successfully. : [in C:\copy_enchird\.\apis\messaging\views.py:views.py:60]
+ERROR : 2024-03-13 11:37 : 2 : 207 : {consumers} : [websocket_connect] : User 2 is not a member of the group : [in C:\copy_enchird\apis\messaging\consumers.py:consumers.py:33]
+ERROR : 2024-03-13 11:48 : 2 : 98 : {consumers} : [websocket_connect] : User 2 is not a member of the group : [in C:\copy_enchird\apis\messaging\consumers.py:consumers.py:33]
+INFO : 2024-03-13 11:49:04,887 : 2 : 887 : User tyron.mbiachare1@ubuea.cm is connected to socket [specific.0423cffe7558447ca13553ca6865a247!2276e450fa4b4757834feba848f93590] : consumers : None
+ERROR : 2024-03-13 12:48 : Anonymous : 679 : {views} : [GroupMessageView] : AuthToken matching query does not exist. : [in C:\copy_enchird\apis\messaging\views.py:views.py:540]

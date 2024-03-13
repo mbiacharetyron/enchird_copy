@@ -28,6 +28,13 @@ class GroupChatConsumer(SyncConsumer):
             # user = self.get_user(usr)
             print(user)
             
+            try:
+                group = ChatGroup.objects.get(id=group_id)
+            except ChatGroup.DoesNotExist:
+                logger.error(f"ChatGroup with id={group_id} not found or is deleted.", extra={'user': user.id})
+                print(f"ChatGroup with id={group_id} not found or is deleted.")
+                raise DenyConnection("User not found or is deleted")
+
             # Check if the user is a member of the group
             if not self.group_has_user(group_id, user.id):
                 logger.error(f"User {user.id} is not a member of the group", extra={'user': user.id})
@@ -37,19 +44,12 @@ class GroupChatConsumer(SyncConsumer):
             self.group_name = f"group_{group_id}"
             print(self.group_name)
             
-            try:
-                group = ChatGroup.objects.get(id=group_id)
-            except ChatGroup.DoesNotExist:
-                logger.error(f"ChatGroup with id={group_id} not found or is deleted.", extra={'user': user.id})
-                print(f"ChatGroup with id={group_id} not found or is deleted.")
-                raise DenyConnection("User not found or is deleted")
-
             self.send({
                 'type': 'websocket.accept'
             }) 
             async_to_sync(self.channel_layer.group_add)(self.group_name, self.channel_name)
             
-            logger.error(f"User {user} is connected to socket [{self.channel_name}]", extra={'user': user.id})
+            logger.info(f"User {user} is connected to socket [{self.channel_name}]", extra={'user': user.id})
             print(f'[{self.channel_name}] - You are connected')
             
         except Exception as e:
@@ -57,9 +57,9 @@ class GroupChatConsumer(SyncConsumer):
             
     
     def websocket_disconnect(self, event):
+        logger.info(f"Disconnected from socket [{self.channel_name}]", extra={'user':"Anonymous"})
         print(f'[{self.channel_name}] - You are Disconnected')
         async_to_sync(self.channel_layer.group_discard)(self.group_name, self.channel_name)
-        print(event)
         
         
     # Received from the frontend to be send using the websocket_message function
@@ -85,7 +85,7 @@ class GroupChatConsumer(SyncConsumer):
 
     def websocket_message(self, event):
         try:
-            print(f'[{self.channel_name}] - Received Sent - {event["text"]}')
+            print(f'[{self.channel_name}] - Sent Message - {event["text"]}')
             data = event['text']
             
             try:
@@ -98,7 +98,6 @@ class GroupChatConsumer(SyncConsumer):
                     print(f"User with id={data['sender']} not found or is deleted.")
                     # async_to_sync(self.close)()
                     raise DenyConnection("User not found or is deleted")
-                
                 
                 new_message = GroupMessage(group=get_group_by_name, sender=user, content=data['message'])
                 new_message.save()
@@ -165,6 +164,7 @@ class ChatConsumer(SyncConsumer):
                 'type': 'websocket.accept'
             }) 
             async_to_sync(self.channel_layer.group_add)(self.group_name, self.channel_name)
+            logger.info(f"User {user} is connected to socket [{self.channel_name}]", extra={'user': user.id})
             print(f'[{self.channel_name}] - You are connected')
             
         except Exception as e:
@@ -174,8 +174,8 @@ class ChatConsumer(SyncConsumer):
     
     def websocket_disconnect(self, event):
         print(f'[{self.channel_name}] - You are Disconnected')
+        logger.info(f"Disconnected from socket [{self.channel_name}]", extra={'user': "Anonymous"})
         async_to_sync(self.channel_layer.group_discard)(self.group_name, self.channel_name)
-        print(event)
         
     # Received from the frontend to be send using the websocket_message function
     def websocket_receive(self, text_data):
