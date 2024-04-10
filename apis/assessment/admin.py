@@ -25,9 +25,24 @@ class ChoiceAdmin(admin.ModelAdmin):
     
     
 class StudentAssessmentScoreAdmin(admin.ModelAdmin):
+    list_display = ('student', 'assessment', 'score')
+
+
+class StudentStructuralScoreAdmin(admin.ModelAdmin):
     list_display = ('student', 'assessment', 'question', 'score')
 
+
+class GradeSystemAdmin(admin.ModelAdmin):
+    list_display = ('grade', 'min_score', 'max_score')
+    search_fields = ('grade',)
+    list_filter = ('grade',)
+
+
+
+admin.site.register(GradeSystem, GradeSystemAdmin)
+
 admin.site.register(StudentAssessmentScore, StudentAssessmentScoreAdmin)
+admin.site.register(StudentStructuralScore, StudentStructuralScoreAdmin)
     
     
     

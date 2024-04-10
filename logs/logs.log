@@ -5,3 +5,6 @@ ERROR : 2024-03-13 11:37 : 2 : 207 : {consumers} : [websocket_connect] : User 2 
 ERROR : 2024-03-13 11:48 : 2 : 98 : {consumers} : [websocket_connect] : User 2 is not a member of the group : [in C:\copy_enchird\apis\messaging\consumers.py:consumers.py:33]
 INFO : 2024-03-13 11:49:04,887 : 2 : 887 : User tyron.mbiachare1@ubuea.cm is connected to socket [specific.0423cffe7558447ca13553ca6865a247!2276e450fa4b4757834feba848f93590] : consumers : None
 ERROR : 2024-03-13 12:48 : Anonymous : 679 : {views} : [GroupMessageView] : AuthToken matching query does not exist. : [in C:\copy_enchird\apis\messaging\views.py:views.py:540]
+INFO : 2024-03-13 12:58:29,668 : 2 : 668 : User tyron.mbiachare1@ubuea.cm is connected to socket [specific.c9559ba3b1254cef918f431d43e16d10!ba4293c8728b449f83d56b3d5a722b6b] : consumers : None
+INFO : 2024-03-13 12:58:29,689 : Anonymous : 689 : Disconnected from socket [specific.c9559ba3b1254cef918f431d43e16d10!ba4293c8728b449f83d56b3d5a722b6b] : consumers : None
+INFO : 2024-03-13 12:59:02,155 : 2 : 155 : User tyron.mbiachare1@ubuea.cm is connected to socket [specific.c9559ba3b1254cef918f431d43e16d10!3c41fb6ba7594cf999ac875c06b40be1] : consumers : None

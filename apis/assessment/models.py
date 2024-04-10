@@ -85,6 +85,16 @@ class StudentResponse(models.Model):
 
 class StudentAssessmentScore(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
+    assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
+    score = models.CharField(max_length=255)  # Assuming the score is an integer
+    is_graded = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Score for {self.student.username} in {self.assessment.title}"
+
+
+class StudentStructuralScore(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.PROTECT, null=True, blank=True)
     assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
     score = models.CharField(max_length=255)  # Assuming the score is an integer
@@ -92,6 +102,7 @@ class StudentAssessmentScore(models.Model):
 
     def __str__(self):
         return f"Score for {self.student.username} in {self.assessment.title}"
+
 
 
 class GradeSystem(models.Model):

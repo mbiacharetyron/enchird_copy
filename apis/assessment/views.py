@@ -415,13 +415,10 @@ def get_assessment_details(request, assessment_id):
 
         if assessment.course not in tutor.courses.all():
             # if user not in assessment.course.instructors.all():
-            logger.warning(
-                "You are not a lecturer of this course",
+            logger.warning( "You are not a lecturer of this course",
                 extra={ 'user': request.user.id } )
-            return Response(
-                {"error": "You are not a lecturer of this course."},
-                status.HTTP_403_FORBIDDEN
-            )
+            return Response( {"error": "You are not a lecturer of this course."},
+                status.HTTP_403_FORBIDDEN )
         
     if is_student:
         try:
@@ -772,7 +769,7 @@ def get_assessment_results(request, assessment_id):
 
     if user.is_a_student is True:
         try:
-            assessment_results = StudentAssessmentScore.objects.filter(assessment_id=assessment_id, student=request.user)
+            assessment_results = StudentStructuralScore.objects.filter(assessment_id=assessment_id, student=request.user)
             serializer = StudentStructuralScoreSerializer(assessment_results, many=True)
             
             logger.info( "Score returned successfully.", extra={ 'user': user.id } )
@@ -862,7 +859,7 @@ def record_student_score(request, assessment_id, student_id):
                 return Response({'error': f'No mark was allocated for {question_id}.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-            assessment_score, created = StudentAssessmentScore.objects.get_or_create(
+            assessment_score, created = StudentStructuralScore.objects.get_or_create(
                 assessment_id=assessment_id,
                 student_id=student_id,
                 question=question,
@@ -917,6 +914,28 @@ def get_student_assessment_grade(request, assessment_id, student_id):
             if student.user != user:
                 logger.error( "You do not have permission to view grade for this assessment.", extra={ 'user': request.user.id } )
                 return Response({'error': 'You do not have permission to view grade for this assessment'}, status=status.HTTP_403_FORBIDDEN)
+        
+        # Check if the student has an existing score for this assessment
+        student_a_score_exists = StudentAssessmentScore.objects.filter(assessment=assessment, student=student.user).exists()
+
+        student_s_score_exists = StudentStructuralScore.objects.filter(assessment=assessment, student=student.user).exists()
+
+
+        if not student_a_score_exists and student_s_score_exists:
+            # Calculate the assessment score from StudentStructuralScore and save it to StudentAssessmentScore
+            total_score = StudentStructuralScore.objects.filter(assessment=assessment, student=student.user).aggregate(total_score=Sum('score'))['total_score'] or 0
+            # Create or update the score in StudentAssessmentScore
+            student_assessment_score, created = StudentAssessmentScore.objects.update_or_create(
+                assessment=assessment,
+                student=student.user,
+                defaults={'score': total_score}
+            )
+            # Log the event
+            if created:
+                logger.info(f"Student assessment score created for user {user.id} and assessment {assessment_id}.")
+            else:
+                logger.info(f"Student assessment score updated for user {user.id} and assessment {assessment_id}.")
+
         
         student_scores = StudentAssessmentScore.objects.filter(assessment=assessment, student_id=student_id)
         print(student_scores) 
@@ -1189,11 +1208,17 @@ def get_all_students_scores(request, course_id):
 
         # Check if teacher is assigned to course
         if user.is_a_teacher is True:
-            if user not in course.instructors.all():
+            tutor = Teacher.objects.get(user=user)
+            
+            if course not in tutor.courses.all():
+            # if user not in course.instructors.all(): 
                 logger.error( "You do not have access to this endpoint.", extra={ 'user': request.user.id })
                 return Response({'error': 'You are not assigned to this course.'}, status=status.HTTP_403_FORBIDDEN)
 
-
+        # Get all assessments for the given course
+        assessments = Assessment.objects.filter(course=course)
+        print(assessments)
+        
         # Get all students registered for the course
         students = Student.objects.filter(registered_courses=course)
         print(students)
@@ -1201,8 +1226,26 @@ def get_all_students_scores(request, course_id):
         # Create a list to store each student's information
         students_data = []
 
-        # Get all assessments for the given course
-        assessments = Assessment.objects.filter(course=course)
+        # Check if the student has an existing score for this assessment
+        # student_a_score_exists = StudentAssessmentScore.objects.filter(assessment=assessment, student=student.user).exists()
+
+        # student_s_score_exists = StudentStructuralScore.objects.filter(assessment=assessment, student=student.user).exists()
+
+        # if not student_a_score_exists and student_s_score_exists:
+        #     # Calculate the assessment score from StudentStructuralScore and save it to StudentAssessmentScore
+        #     total_score = StudentStructuralScore.objects.filter(assessment=assessment, student=student.user).aggregate(total_score=Sum('score'))['total_score'] or 0
+        #     # Create or update the score in StudentAssessmentScore
+        #     student_assessment_score, created = StudentAssessmentScore.objects.update_or_create(
+        #         assessment=assessment,
+        #         student=student.user,
+        #         defaults={'score': total_score}
+        #     )
+        #     # Log the event
+        #     if created:
+        #         logger.info(f"Student assessment score created for user {user.id} and assessment {assessment}.")
+        #     else:
+        #         logger.info(f"Student assessment score updated for user {user.id} and assessment {assessment}.")
+
 
         # Iterate through each student and retrieve their scores
         for student in students:
@@ -1216,17 +1259,20 @@ def get_all_students_scores(request, course_id):
 
             # Retrieve all student's assessments score for the given course
             assessment_scores = StudentAssessmentScore.objects.filter(student_id=student.user.id, assessment__course_id=course_id)
+            print(assessment_scores)
 
             # Retrieve the student's scores for each assessment in the course
             for assessment in course.assessment_set.all():
                 try:
                     score = StudentAssessmentScore.objects.get(student=student.user, assessment=assessment)
-                    
+                    # print(type(score.score))
+                    # print(score.score)
                     # Decrypt the score before adding it to the list
-                    decrypted_score = decrypt_float(score.score)
+                    # decrypted_score = decrypt_float(score.score)
                     student_data["assessment_scores"].append({
                         "assessment_title": assessment.title,
-                        "score": decrypted_score
+                        "score": score.score
+                        # "score": decrypted_score
                     })
                 except StudentAssessmentScore.DoesNotExist:
                     # Handle the case where the student has no score for the assessment
@@ -1234,11 +1280,24 @@ def get_all_students_scores(request, course_id):
                         "assessment_title": assessment.title,
                         "score": None
                     })
+                    
+                    if not StudentStructuralScore.objects.filter(assessment=assessment, student=student.user).exists():
+                        continue
+
+                    total_score = StudentStructuralScore.objects.filter(assessment=assessment, student=student.user).aggregate(total_score=Sum('score'))['total_score'] or 0
+                    student_assessment_score, _ = StudentAssessmentScore.objects.update_or_create(
+                        assessment=assessment,
+                        student=student.user,
+                        defaults={'score': total_score}
+                    )
 
             # Calculate and append the student's avewrage score and grade
-            total_score = sum(decrypt_float(assessment.score) for assessment in assessment_scores)
+            total_score_sum = sum(int(score.score) for score in assessment_scores)
+            # total_score = sum(decrypt_float(assessment.score) for assessment in assessment_scores)
+            print(total_score_sum)
 
-            average_score = total_score / len(assessments)
+            average_score = total_score_sum / len(assessments) if assessments else 0
+            print(average_score)
             student_data["average_score"] = average_score
             student_data["grade"] = get_grade_for_score(average_score)            
 
@@ -1254,6 +1313,72 @@ def get_all_students_scores(request, course_id):
     except Course.DoesNotExist:
         logger.error( "Cpourse not found.", extra={ 'user': user.id })
         return Response({'error': 'Course not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+# @api_view(['GET'])
+# def get_all_students_assessment_grades(request, assessment_id):
+#     user = request.user
+
+#     if not user.is_authenticated:
+#         logger.error("You must provide valid authentication credentials.", extra={'user': 'Anonymous'})
+#         return Response({'error': 'You must provide valid authentication credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
+    
+#     #Check if user is admin or lecturer
+#     if user.is_admin is False and user.is_a_teacher is False:
+#         logger.error( "You do not have access to this endpoint.", extra={ 'user': user.id })
+#         return Response(  { "error": "You do not have access to this endpoint."}, status.HTTP_403_FORBIDDEN )
+
+#     try:
+#         assessment = Assessment.objects.get(pk=assessment_id)
+
+#         if user.is_a_teacher:
+#             teacher = Teacher.objects.get(user=user)
+#             course = assessment.course
+#             if course not in teacher.courses.all():
+#                 logger.error("You are not assigned to this course.", extra={'user': user.id})
+#                 return Response({'error': 'You are not assigned to this course.'}, status=status.HTTP_403_FORBIDDEN)
+
+#         # Retrieve all students enrolled in the course related to the assessment
+#         enrolled_students = Student.objects.filter(registered_courses=assessment.course)
+
+#         student_grades = []
+#         for student in enrolled_students:
+#             student_scores = StudentAssessmentScore.objects.filter(assessment=assessment, student=student)
+
+#             # Calculate the total score for the student in this assessment
+#             total_score = student_scores.aggregate(total_score=Sum('score'))['total_score']
+#             if total_score is None:
+#                 logger.error(f"Student score not found for assessment {assessment_id} for student {student.id}", extra={'user': user.id})
+#                 continue
+
+#             # Calculate the total mark allocation for all questions in this assessment
+#             total_mark_allocation = Question.objects.filter(assessment=assessment).aggregate(total_mark_allocation=Sum('mark_allocated'))['total_mark_allocation']
+
+#             # Calculate the percentage score
+#             percentage_score = (total_score / total_mark_allocation) * 100 if total_mark_allocation != 0 else 0
+
+#             # Determine the grade based on your grading system
+#             grade = calculate_grade(percentage_score)
+
+#             # Append the student's grade to the list
+#             student_grades.append({
+#                 'student_id': student.id,
+#                 'total_score': total_score,
+#                 'percentage_score': percentage_score,
+#                 'grade': grade
+#             })
+
+#         return Response(student_grades, status=status.HTTP_200_OK)
+
+#     except Assessment.DoesNotExist:
+#         logger.error('Assessment not found', extra={'user': user.id})
+#         return Response({'error': 'Assessment not found'}, status=status.HTTP_404_NOT_FOUND)
+
+#     except Exception as e:
+#         logger.error(str(e), extra={'user': user.id})
+#         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
 @api_view(['GET'])
