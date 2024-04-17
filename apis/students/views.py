@@ -248,6 +248,7 @@ class StudentViewSet(viewsets.ModelViewSet):
                     user = user_serializer.save(is_a_student=True, is_active=True)
 
                     password = User.objects.make_random_password()
+                    print(password)
                     user.reset_token = reset_token
                     user.password_requested_at = timezone.now()
                     user.set_password(password)
