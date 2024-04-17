@@ -40,6 +40,7 @@ ALLOWED_HOSTS = ['enchird.biz',
                 #   'localhost'
 ]
 
+CSRF_TRUSTED_ORIGINS = ['https://*.enchird-app.onrender.com']
 
 DATABASES = {
     'default': {
