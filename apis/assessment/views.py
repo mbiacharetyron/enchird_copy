@@ -1316,73 +1316,8 @@ def get_all_students_scores(request, course_id):
 
 
 
-# @api_view(['GET'])
-# def get_all_students_assessment_grades(request, assessment_id):
-#     user = request.user
-
-#     if not user.is_authenticated:
-#         logger.error("You must provide valid authentication credentials.", extra={'user': 'Anonymous'})
-#         return Response({'error': 'You must provide valid authentication credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
-    
-#     #Check if user is admin or lecturer
-#     if user.is_admin is False and user.is_a_teacher is False:
-#         logger.error( "You do not have access to this endpoint.", extra={ 'user': user.id })
-#         return Response(  { "error": "You do not have access to this endpoint."}, status.HTTP_403_FORBIDDEN )
-
-#     try:
-#         assessment = Assessment.objects.get(pk=assessment_id)
-
-#         if user.is_a_teacher:
-#             teacher = Teacher.objects.get(user=user)
-#             course = assessment.course
-#             if course not in teacher.courses.all():
-#                 logger.error("You are not assigned to this course.", extra={'user': user.id})
-#                 return Response({'error': 'You are not assigned to this course.'}, status=status.HTTP_403_FORBIDDEN)
-
-#         # Retrieve all students enrolled in the course related to the assessment
-#         enrolled_students = Student.objects.filter(registered_courses=assessment.course)
-
-#         student_grades = []
-#         for student in enrolled_students:
-#             student_scores = StudentAssessmentScore.objects.filter(assessment=assessment, student=student)
-
-#             # Calculate the total score for the student in this assessment
-#             total_score = student_scores.aggregate(total_score=Sum('score'))['total_score']
-#             if total_score is None:
-#                 logger.error(f"Student score not found for assessment {assessment_id} for student {student.id}", extra={'user': user.id})
-#                 continue
-
-#             # Calculate the total mark allocation for all questions in this assessment
-#             total_mark_allocation = Question.objects.filter(assessment=assessment).aggregate(total_mark_allocation=Sum('mark_allocated'))['total_mark_allocation']
-
-#             # Calculate the percentage score
-#             percentage_score = (total_score / total_mark_allocation) * 100 if total_mark_allocation != 0 else 0
-
-#             # Determine the grade based on your grading system
-#             grade = calculate_grade(percentage_score)
-
-#             # Append the student's grade to the list
-#             student_grades.append({
-#                 'student_id': student.id,
-#                 'total_score': total_score,
-#                 'percentage_score': percentage_score,
-#                 'grade': grade
-#             })
-
-#         return Response(student_grades, status=status.HTTP_200_OK)
-
-#     except Assessment.DoesNotExist:
-#         logger.error('Assessment not found', extra={'user': user.id})
-#         return Response({'error': 'Assessment not found'}, status=status.HTTP_404_NOT_FOUND)
-
-#     except Exception as e:
-#         logger.error(str(e), extra={'user': user.id})
-#         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-
 @api_view(['GET'])
-def list_ca_assessment_results(request, type, *args, **kwargs):
+def list_assessment_results(request, type, *args, **kwargs):
     user = request.user
 
     if not user.is_authenticated:
@@ -1398,7 +1333,6 @@ def list_ca_assessment_results(request, type, *args, **kwargs):
 
     assessment_results = StudentAssessmentScore.objects.filter(student=student.user,
                                                                 assessment__assessment_type=type)
-
     serializer = StudentStructuralScoreSerializer(assessment_results, many=True)
 
     logger.info("CA Assessment results returned successfully.", extra={'user': user.id})
