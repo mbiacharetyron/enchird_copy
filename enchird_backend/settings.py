@@ -160,7 +160,7 @@ CHANNEL_LAYERS = {
             # "hosts": [("127.0.0.1", 6379)],
             # "hosts": [("localhost", 6379)],
             # "hosts": [('redis://:M7lV86L98rsLDAjsewHvBqKa2XQHy7GE@redis-11772.c293.eu-central-1-1.ec2.cloud.redislabs.com:11772')],
-            "hosts": [('redis://:xkWlFO19dtTgilMaj6j7manD3SbtfwFB@redis-12811.c300.eu-central-1-1.ec2.cloud.redislabs.com:12811')],
+            "hosts": [('redis://:KTcGNIIjZZRZuJWF9sFNSe2c8m5SnaXb@redis-17214.c311.eu-central-1-1.ec2.redns.redis-cloud.com:17214')],
         },
     },
 }
